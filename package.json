@@ -1,0 +1,22 @@
+{
+  "name": "the_merchant",
+  "version": "1.0.0",
+  "description": "A javascript game about trading resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriwicked/the-merchant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adriwicked/the-merchant/issues"
+  },
+  "homepage": "https://github.com/adriwicked/the-merchant#readme",
+  "devDependencies": {
+    "jest": "^29.4.3"
+  }
+}
