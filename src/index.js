@@ -1,6 +1,9 @@
+import buildMap from './map.js'
+import painter from './painter.js'
+import config from './config.js'
+
 let cnv
 let ctx
-let board
 
 window.onload = init
 
@@ -9,6 +12,8 @@ function init() {
     cnv.width = 800
     cnv.height = 600
     ctx = cnv.getContext('2d')
-    ctx.fillStyle = '#444444'
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+    const map = buildMap(config.MAP_WIDTH, config.MAP_HEIGHT)
+    painter.init(ctx)
+    painter.drawGame(map.getGrid())
 }
