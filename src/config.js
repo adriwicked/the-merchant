@@ -6,8 +6,9 @@ export default {
     BORDER_HEADER: 25,
     BORDER_SEPARATION: 2,
     BORDER_WIDTH: 3,
-    MAP_WIDTH: 50,
-    MAP_HEIGHT: 38,
+    MAP_WIDTH: 20,
+    MAP_HEIGHT: 15,
+    PERLIN_CELL_RESOLUTION: 4,
     getOutterBorderRect() {
         let mapSize = this.getMapSize()
         return {
