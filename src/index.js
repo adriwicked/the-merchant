@@ -8,7 +8,7 @@ let ctx
 window.onload = init
 
 function init() {
-    cnv = document.getElementById("cnv");
+    cnv = document.getElementById('game-canvas');
     cnv.width = 800
     cnv.height = 600
     ctx = cnv.getContext('2d')

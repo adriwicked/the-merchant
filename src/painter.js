@@ -4,7 +4,7 @@ import perlin from './perlin.js'
 let ctx
 let mapPosition = { x: 0, y: 0 }
 let colors = {
-    background: '#282828',
+    background: '#333',
     border: 'red',
     cell: '#777777'
 }
