@@ -4,11 +4,10 @@ export default {
     CELL_SIZE: 11,
     CELL_SEPARATION: 2,
     BORDER_HEADER: 25,
-    BORDER_SEPARATION: 2,
     BORDER_WIDTH: 3,
-    MAP_WIDTH: 20,
-    MAP_HEIGHT: 15,
-    PERLIN_CELL_RESOLUTION: 4,
+    MAP_WIDTH: 60,
+    MAP_HEIGHT: 40,
+    PERLIN_CELL_RESOLUTION: 5,
     COLORS: {
         BACKGROUND: '#333',
         BORDER: 'red',
@@ -19,24 +18,24 @@ export default {
         return {
             x: this.CANVAS_WIDTH / 2
                 - mapSize.width / 2
-                - this.BORDER_SEPARATION
+                - this.CELL_SEPARATION
                 - this.BORDER_WIDTH,
             y: this.CANVAS_HEIGHT / 2
                 - mapSize.height / 2
-                - this.BORDER_SEPARATION
+                - this.CELL_SEPARATION
                 - this.BORDER_WIDTH
                 - this.BORDER_HEADER,
-            width: mapSize.width + this.BORDER_SEPARATION * 2 + this.BORDER_WIDTH * 2,
-            height: mapSize.height + this.BORDER_SEPARATION * 2 + this.BORDER_WIDTH * 2 + this.BORDER_HEADER
+            width: mapSize.width + this.CELL_SEPARATION * 2 + this.BORDER_WIDTH * 2,
+            height: mapSize.height + this.CELL_SEPARATION * 2 + this.BORDER_WIDTH * 2 + this.BORDER_HEADER
         }
     },
     getInnerBorderRect() {
         let mapSize = this.getMapSize()
         return {
-            x: this.CANVAS_WIDTH / 2 - mapSize.width / 2 - this.BORDER_SEPARATION,
-            y: this.CANVAS_HEIGHT / 2 - mapSize.height / 2 - this.BORDER_SEPARATION,
-            width: mapSize.width + this.BORDER_SEPARATION * 2,
-            height: mapSize.height + this.BORDER_SEPARATION * 2
+            x: this.CANVAS_WIDTH / 2 - mapSize.width / 2 - this.CELL_SEPARATION,
+            y: this.CANVAS_HEIGHT / 2 - mapSize.height / 2 - this.CELL_SEPARATION,
+            width: mapSize.width + this.CELL_SEPARATION * 2,
+            height: mapSize.height + this.CELL_SEPARATION * 2
         }
     },
     getMapSize() {

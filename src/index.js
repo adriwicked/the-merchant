@@ -1,7 +1,7 @@
-import startGame from './game.js';
+import game from './game.js';
 
 window.onload = init
 
 function init() {
-    startGame({ canvas: document.getElementById('game-canvas') })
+    game.init({ canvas: document.getElementById('game-canvas') })
 }

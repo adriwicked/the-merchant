@@ -1,29 +1,26 @@
-export default function buildPerlin({gridWidth, gridHeight, resolution}) {
-  let vectors
-  let values
+export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
+  const vectors = generateGradVectors({ gridWidth, gridHeight, resolution })
+  const values = generateValues({ gridWidth, gridHeight })
+  console.log(vectors)
+  console.log(values)
+  // printValues(values)
 
-  init()
+  return {
+    vectors,
+    values
+  }
 
-  function init() {
+  function generateGradVectors({ gridWidth, gridHeight, resolution }) {
     const numVectorsX = Math.floor(gridWidth / resolution) + 1
     const extraVectorX = gridWidth % resolution == 0 ? 0 : 1
-    const vectorsX = numVectorsX + extraVectorX
+    const finalNumVectorsX = numVectorsX + extraVectorX
 
     const numVectorsY = Math.floor(gridHeight / resolution) + 1
     const extraVectorY = gridHeight % resolution == 0 ? 0 : 1
-    const vectorsY = numVectorsY + extraVectorY
+    const finalNumVectorsY = numVectorsY + extraVectorY
 
-    vectors = new Array(vectorsY).fill(0)
-      .map(() => new Array(vectorsX).fill(0).map(getRandUnitVect))
-
-    values = new Array(gridHeight).fill(0)
-      .map(() => new Array(gridWidth).fill(0))
-
-    for (let row = 0; row < values.length; row++) {
-      for (let col = 0; col < values[0].length; col++) {
-        values[row][col] = getValue(row, col)
-      }
-    }
+    return new Array(finalNumVectorsY).fill(0)
+      .map(() => new Array(finalNumVectorsX).fill(0).map(getRandUnitVect))
   }
 
   function getRandUnitVect() {
@@ -31,47 +28,81 @@ export default function buildPerlin({gridWidth, gridHeight, resolution}) {
     return { x: Math.cos(theta), y: Math.sin(theta) };
   }
 
-  function getValue(x, y) {
-    x += 0.5
-    y += 0.5
-    let xTopLeftIdx = Math.floor(x / resolution)
-    let yTopLeftIdx = Math.floor(y / resolution)
+  function generateValues({ gridWidth, gridHeight }) {
+    const values = []
 
-    let topLeft = dot_prod_grid(x, y, xTopLeftIdx, yTopLeftIdx)
-    let topRight = dot_prod_grid(x, y, xTopLeftIdx + 1, yTopLeftIdx)
-    let bottomLeft = dot_prod_grid(x, y, xTopLeftIdx, yTopLeftIdx + 1)
-    let bottomRight = dot_prod_grid(x, y, xTopLeftIdx + 1, yTopLeftIdx + 1)
-    let lerpTop = lerp(x - xTopLeftIdx, topLeft, topRight)
-    let lerpBottom = lerp(x - xTopLeftIdx, bottomLeft, bottomRight)
-    let value = lerp(y - yTopLeftIdx, lerpTop, lerpBottom)
-
-    console.log(`x:${x}|xIdx:${xTopLeftIdx}|bottomRight:${bottomRight}`)
-
-    return topLeft
-  }
-
-  function dot_prod_grid(x, y, xIdx, yIdx) {
-    let g_vect = vectors[xIdx][yIdx]
-    let d_vect = {
-      x: x - xIdx * resolution + resolution,
-      y: y - yIdx * resolution + resolution
+    for (let y = 0; y < gridHeight; y++) {
+      values[y] = []
+      for (let x = 0; x < gridWidth; x++) {
+        values[y][x] = getValue(x, y)
+      }
     }
 
-    return d_vect.x * g_vect.x + d_vect.y * g_vect.y
+    return values
   }
 
-  function lerp(x, a, b) {
+  function getValue(x, y) {
+    const offset = 0.5 / resolution
+
+    // coordenadas en grid de vectores
+    x = x / resolution + offset
+    y = y / resolution + offset
+
+    const xF = Math.floor(x)
+    const yF = Math.floor(y)
+
+    const tlv = dotProduct(x, y, xF, yF)
+    const trv = dotProduct(x, y, xF + 1, yF)
+    const blv = dotProduct(x, y, xF, yF + 1)
+    const brv = dotProduct(x, y, xF + 1, yF + 1)
+
+    const lerpTop = lerp(tlv, trv, x - xF)
+    const lerpBottom = lerp(blv, brv, x - xF)
+    const value = lerp(lerpTop, lerpBottom, y - yF)
+
+    if (value > 1 || value < -1) {
+      console.log('mal')
+    }
+
+    return value
+  }
+
+  function dotProduct(x, y, vx, vy) {
+    const distVector = {
+      x: x - vx,
+      y: y - vy,
+    }
+
+    return dot(distVector, vectors[vy][vx])
+  }
+
+  function normalizeVector(vector) {
+    const magnitude = Math.sqrt(vector.x ** 2 + vector.y ** 2)
+    return {
+      x: vector.x / magnitude,
+      y: vector.y / magnitude
+    }
+  }
+
+  function dot(v1, v2) {
+    return v1.x * v2.x + v1.y * v2.y
+  }
+
+  function printValues(values) {
+    values.forEach(row => {
+      const _row = row.reduce((acc, curr) => {
+        return `${acc} ${curr.toFixed(2)}`
+      }, '')
+      console.log(_row)
+    })
+  }
+
+  function lerp(a, b, x) {
     return a + x * (b - a)
     // return a + smootherstep(x) * (b - a)
   }
 
   function smootherstep(x) {
-    return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3
-  }
-
-  return {
-    init,
-    getVectors: () => vectors,
-    getValues: () => values
+    return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3;
   }
 }

@@ -1,16 +1,15 @@
-import config from './config.js'
+import cfg from './config.js'
 import painter from './painter.js'
-import buildPerlin from './perlin.js'
+import getPerlinInfo from './perlin.js'
 
 export default function buildMap(ctx) {
-  let map = new Array(config.MAP_HEIGHT).fill(0)
-    .map(() => new Array(config.MAP_WIDTH).fill(0))
+  let map = new Array(cfg.MAP_HEIGHT).fill(0)
+    .map(() => new Array(cfg.MAP_WIDTH).fill(0))
 
-  const mapPosition = config.getMapPosition()
-  const perlin = buildPerlin({
-    gridWidth: config.MAP_WIDTH,
-    gridHeight: config.MAP_HEIGHT,
-    resolution: config.PERLIN_CELL_RESOLUTION,
+  const perlinInfo = getPerlinInfo({
+    gridWidth: cfg.MAP_WIDTH,
+    gridHeight: cfg.MAP_HEIGHT,
+    resolution: cfg.PERLIN_CELL_RESOLUTION,
   })
 
   function draw() {
@@ -18,16 +17,16 @@ export default function buildMap(ctx) {
 
     drawMapBorder()
 
-    const values = perlin.getValues()
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
-        let value = values[row][col] * 100
+        let value = perlinInfo.values[row][col] * 100
         let falta = 100 - value
         let lleva = 200 - falta
         let ratio = lleva / 200
         let perc = ratio * 100
         const color = `hsl(0, 0%, ${perc}%)`
         drawCell(col, row, color)
+        // drawCell(col, row, cfg.COLORS.CELL)
       }
     }
 
@@ -36,10 +35,10 @@ export default function buildMap(ctx) {
 
   function drawCell(x, y, color) {
     const cellRect = {
-      x: mapPosition.x + (config.CELL_SIZE + config.CELL_SEPARATION) * x,
-      y: mapPosition.y + (config.CELL_SIZE + config.CELL_SEPARATION) * y,
-      width: config.CELL_SIZE,
-      height: config.CELL_SIZE
+      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * x,
+      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * y,
+      width: cfg.CELL_SIZE,
+      height: cfg.CELL_SIZE
     }
 
     ctx.beginPath()
@@ -49,8 +48,8 @@ export default function buildMap(ctx) {
   }
 
   function drawMapBorder() {
-    const outterBorderRect = config.getOutterBorderRect()
-    ctx.fillStyle = config.COLORS.CELL
+    const outterBorderRect = cfg.getOutterBorderRect()
+    ctx.fillStyle = cfg.COLORS.CELL
     ctx.beginPath()
     ctx.fillRect(
       outterBorderRect.x,
@@ -59,8 +58,8 @@ export default function buildMap(ctx) {
       outterBorderRect.height
     )
 
-    const innerBorderRect = config.getInnerBorderRect()
-    ctx.fillStyle = config.COLORS.BACKGROUND
+    const innerBorderRect = cfg.getInnerBorderRect()
+    ctx.fillStyle = cfg.COLORS.BACKGROUND
     ctx.beginPath()
     ctx.fillRect(
       innerBorderRect.x,
@@ -71,15 +70,15 @@ export default function buildMap(ctx) {
   }
 
   function drawPerlinVectors() {
-    const vectors = perlin.getVectors()
+    const vectors = perlinInfo.vectors
 
-    for (let row = 0; row < vectors.length; row++) {
-      for (let col = 0; col < vectors[0].length; col++) {
-        const vector = vectors[row][col]
+    for (let y = 0; y < vectors.length; y++) {
+      for (let x = 0; x < vectors[0].length; x++) {
+        const vector = vectors[y][x]
         drawVectorInMap(
           {
-            x: col * config.PERLIN_CELL_RESOLUTION,
-            y: row * config.PERLIN_CELL_RESOLUTION
+            x: x * cfg.PERLIN_CELL_RESOLUTION,
+            y: y * cfg.PERLIN_CELL_RESOLUTION
           },
           vector
         )
@@ -89,16 +88,16 @@ export default function buildMap(ctx) {
 
   function drawVectorInMap(mapCoords, vector) {
     const origin = {
-      x: mapPosition.x + (config.CELL_SIZE + config.CELL_SEPARATION) * mapCoords.x,
-      y: mapPosition.y + (config.CELL_SIZE + config.CELL_SEPARATION) * mapCoords.y
+      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * mapCoords.x,
+      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * mapCoords.y
     }
 
     const terminal = {
-      x: origin.x + vector.x * config.CELL_SIZE,
-      y: origin.y + vector.y * config.CELL_SIZE
+      x: origin.x + vector.x * cfg.CELL_SIZE,
+      y: origin.y + vector.y * cfg.CELL_SIZE
     }
 
-    painter.drawVector(ctx, origin, terminal)
+    painter.drawVector(origin, terminal)
   }
 
   return {
