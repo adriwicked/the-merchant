@@ -9,6 +9,11 @@ export default {
     MAP_WIDTH: 20,
     MAP_HEIGHT: 15,
     PERLIN_CELL_RESOLUTION: 4,
+    COLORS: {
+        BACKGROUND: '#333',
+        BORDER: 'red',
+        CELL: '#777777'
+    },
     getOutterBorderRect() {
         let mapSize = this.getMapSize()
         return {
