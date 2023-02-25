@@ -5,13 +5,16 @@ export default {
     CELL_SEPARATION: 2,
     BORDER_HEADER: 25,
     BORDER_WIDTH: 3,
-    MAP_WIDTH: 60,
-    MAP_HEIGHT: 40,
-    PERLIN_CELL_RESOLUTION: 5,
+    MAP_WIDTH: 41,
+    MAP_HEIGHT: 41,
+    PERLIN_CELL_RESOLUTION: 10,
     COLORS: {
         BACKGROUND: '#333',
         BORDER: 'red',
-        CELL: '#777777'
+        CELL: '#777777',
+        WATER: ['#3a78cd', '#3860b5', '#275dbc'],
+        GRASS: ['#627a08', '#445c08', '#415908'],
+        MOUNTAIN: ['#8e7c6a', '#6f5b46', '#6f5b46'],
     },
     getOutterBorderRect() {
         let mapSize = this.getMapSize()

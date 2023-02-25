@@ -19,18 +19,30 @@ export default function buildMap(ctx) {
 
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
-        let value = perlinInfo.values[row][col] * 100
-        let falta = 100 - value
-        let lleva = 200 - falta
-        let ratio = lleva / 200
-        let perc = ratio * 100
-        const color = `hsl(0, 0%, ${perc}%)`
+        let value = perlinInfo.values[row][col]
+        let color
+        if (value <= 0) {
+          color = cfg.COLORS.WATER[2]
+        } else if (value >0 && value <= 0.1) {
+          color = cfg.COLORS.WATER[0]
+          // color = cfg.COLORS.GRASS[0]
+        } else if (value >0.1 && value <= 0.4) {
+          color = cfg.COLORS.GRASS[1]
+        } else if (value >0.4 && value <= 0.5) {
+          // color = cfg.COLORS.GRASS[2]
+          color = cfg.COLORS.MOUNTAIN[0]
+        } else if (value >0.5 && value <= 0.7) {
+          color = cfg.COLORS.MOUNTAIN[0]
+        } else if (value >0.7 && value <= 0.85) {
+          color = cfg.COLORS.MOUNTAIN[1]
+        } else if (value >0.85) {
+          color = cfg.COLORS.MOUNTAIN[2]
+        }
         drawCell(col, row, color)
-        // drawCell(col, row, cfg.COLORS.CELL)
       }
     }
 
-    drawPerlinVectors()
+    // drawPerlinVectors()
   }
 
   function drawCell(x, y, color) {
@@ -93,8 +105,8 @@ export default function buildMap(ctx) {
     }
 
     const terminal = {
-      x: origin.x + vector.x * cfg.CELL_SIZE,
-      y: origin.y + vector.y * cfg.CELL_SIZE
+      x: origin.x + vector.x * cfg.CELL_SIZE * 3,
+      y: origin.y + vector.y * cfg.CELL_SIZE * 3
     }
 
     painter.drawVector(origin, terminal)
