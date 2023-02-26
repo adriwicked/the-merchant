@@ -12,9 +12,9 @@ export default {
         BACKGROUND: '#333',
         BORDER: 'red',
         CELL: '#777777',
-        WATER: ['#3a78cd', '#3860b5', '#275dbc'],
-        GRASS: ['#627a08', '#445c08', '#415908'],
-        MOUNTAIN: ['#8e7c6a', '#6f5b46', '#6f5b46'],
+        WATER: ['#2f83c9', '#2375b4', '#256299'],
+        GRASS: ['#428d48', '#5cb35d', '#4fa254'],
+        MOUNTAIN: ['#8e7c6a', '#514635', '#cfcfcf'],
     },
     getOutterBorderRect() {
         let mapSize = this.getMapSize()

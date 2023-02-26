@@ -1,9 +1,6 @@
 export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
   const vectors = generateGradVectors({ gridWidth, gridHeight, resolution })
   const values = generateValues({ gridWidth, gridHeight })
-  console.log(vectors)
-  console.log(values)
-  // printValues(values)
 
   return {
     vectors,
@@ -44,7 +41,6 @@ export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
   function getValue(x, y) {
     const offset = 0.5 / resolution
 
-    // coordenadas en grid de vectores
     x = x / resolution + offset
     y = y / resolution + offset
 
@@ -60,10 +56,6 @@ export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
     const lerpBottom = lerp(blv, brv, x - xF)
     const value = lerp(lerpTop, lerpBottom, y - yF)
 
-    if (value > 1 || value < -1) {
-      console.log('mal')
-    }
-
     return value
   }
 
@@ -74,14 +66,6 @@ export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
     }
 
     return dot(distVector, vectors[vy][vx])
-  }
-
-  function normalizeVector(vector) {
-    const magnitude = Math.sqrt(vector.x ** 2 + vector.y ** 2)
-    return {
-      x: vector.x / magnitude,
-      y: vector.y / magnitude
-    }
   }
 
   function dot(v1, v2) {
@@ -98,8 +82,8 @@ export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
   }
 
   function lerp(a, b, x) {
-    return a + x * (b - a)
-    // return a + smootherstep(x) * (b - a)
+    // return a + x * (b - a)
+    return a + smootherstep(x) * (b - a)
   }
 
   function smootherstep(x) {

@@ -14,71 +14,63 @@ export default function buildMap(ctx) {
 
   function draw() {
     painter.clearCanvas(ctx)
-
     drawMapBorder()
+    drawMap()
+  }
 
+  function drawMap() {
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
         let value = perlinInfo.values[row][col]
         let color
         if (value <= 0) {
           color = cfg.COLORS.WATER[2]
-        } else if (value >0 && value <= 0.1) {
+        } else if (value > 0 && value <= 0.1) {
           color = cfg.COLORS.WATER[0]
-          // color = cfg.COLORS.GRASS[0]
-        } else if (value >0.1 && value <= 0.4) {
+        } else if (value > 0.1 && value <= 0.4) {
           color = cfg.COLORS.GRASS[1]
-        } else if (value >0.4 && value <= 0.5) {
-          // color = cfg.COLORS.GRASS[2]
+        } else if (value > 0.4 && value <= 0.5) {
           color = cfg.COLORS.MOUNTAIN[0]
-        } else if (value >0.5 && value <= 0.7) {
+        } else if (value > 0.5 && value <= 0.7) {
           color = cfg.COLORS.MOUNTAIN[0]
-        } else if (value >0.7 && value <= 0.85) {
+        } else if (value > 0.7 && value <= 0.85) {
           color = cfg.COLORS.MOUNTAIN[1]
-        } else if (value >0.85) {
+        } else if (value > 0.85) {
           color = cfg.COLORS.MOUNTAIN[2]
         }
         drawCell(col, row, color)
       }
     }
-
-    // drawPerlinVectors()
-  }
-
-  function drawCell(x, y, color) {
-    const cellRect = {
-      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * x,
-      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * y,
-      width: cfg.CELL_SIZE,
-      height: cfg.CELL_SIZE
-    }
-
-    ctx.beginPath()
-    ctx.fillStyle = color
-    ctx.fillRect(cellRect.x, cellRect.y, cellRect.width, cellRect.height)
-    ctx.closePath()
   }
 
   function drawMapBorder() {
     const outterBorderRect = cfg.getOutterBorderRect()
-    ctx.fillStyle = cfg.COLORS.CELL
-    ctx.beginPath()
-    ctx.fillRect(
-      outterBorderRect.x,
-      outterBorderRect.y,
-      outterBorderRect.width,
-      outterBorderRect.height
-    )
+    painter.drawRect({
+      x: outterBorderRect.x,
+      y: outterBorderRect.y,
+      width: outterBorderRect.width,
+      height: outterBorderRect.height,
+      color: cfg.COLORS.CELL
+    })
 
     const innerBorderRect = cfg.getInnerBorderRect()
-    ctx.fillStyle = cfg.COLORS.BACKGROUND
-    ctx.beginPath()
-    ctx.fillRect(
-      innerBorderRect.x,
-      innerBorderRect.y,
-      innerBorderRect.width,
-      innerBorderRect.height
-    )
+    painter.drawRect({
+      x: innerBorderRect.x,
+      y: innerBorderRect.y,
+      width: innerBorderRect.width,
+      height: innerBorderRect.height,
+      color: cfg.COLORS.BACKGROUND
+    })
+  }
+
+  function drawCell(x, y, color) {
+    painter.drawRect({
+      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * x,
+      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * y,
+      width: cfg.CELL_SIZE,
+      height: cfg.CELL_SIZE,
+      color
+    })
   }
 
   function drawPerlinVectors() {
