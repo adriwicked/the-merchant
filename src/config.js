@@ -7,7 +7,7 @@ export default {
     BORDER_WIDTH: 3,
     MAP_WIDTH: 41,
     MAP_HEIGHT: 41,
-    PERLIN_CELL_RESOLUTION: 15,
+    PERLIN_CELL_RESOLUTION: 18,
     MAP_COLOR_RANGES: [
         { MAX: -0.4, COLOR: '#256299' }, // DEEP
         { MAX: -0.03, COLOR: '#2375b4' }, // MEDIUM
