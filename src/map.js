@@ -41,27 +41,19 @@ export default function buildMap(ctx) {
   function drawMap() {
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
-        let value = perlinInfo.values[row][col]
-        let color
-        if (value <= 0) {
-          color = cfg.COLORS.MAP.WATER[2]
-        } else if (value > 0 && value <= 0.1) {
-          color = cfg.COLORS.MAP.WATER[0]
-        } else if (value > 0.1 && value <= 0.4) {
-          color = cfg.COLORS.MAP.GRASS[1]
-        } else if (value > 0.4 && value <= 0.5) {
-          color = cfg.COLORS.MAP.MOUNTAIN[0]
-        } else if (value > 0.5 && value <= 0.7) {
-          color = cfg.COLORS.MAP.MOUNTAIN[0]
-        } else if (value > 0.7 && value <= 0.85) {
-          color = cfg.COLORS.MAP.MOUNTAIN[1]
-        } else if (value > 0.85) {
-          color = cfg.COLORS.MAP.MOUNTAIN[2]
-        }
+        let height = perlinInfo.values[row][col]
+        let color = getHeightColor(height)
         color = painter.randomizeColor(color)
         drawCell(col, row, color)
       }
     }
+  }
+
+  function getHeightColor(height) {
+    const range = cfg.MAP_COLOR_RANGES
+      .find(r => height <= r.MAX)
+
+    return range.COLOR
   }
 
   function drawCell(x, y, color) {
