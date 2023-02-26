@@ -10,11 +10,11 @@ export default {
     PERLIN_CELL_RESOLUTION: 15,
     MAP_COLOR_RANGES: [
         { MAX: -0.4, COLOR: '#256299' }, // DEEP
-        { MAX: -0.1, COLOR: '#2375b4' }, // MEDIUM
+        { MAX: -0.03, COLOR: '#2375b4' }, // MEDIUM
         { MAX: 0.02, COLOR: '#4699de' }, // SURFACE
-        { MAX: 0.1, COLOR: '#ab976a' }, // SAND
+        { MAX: 0.09, COLOR: '#ab976a' }, // SAND
         { MAX: 0.2, COLOR: '#367147' }, // DARK LOW GRASS
-        { MAX: 0.3, COLOR: '#457950' }, // LIGHT HIGH GRASS
+        { MAX: 0.4, COLOR: '#457950' }, // LIGHT HIGH GRASS
         { MAX: 0.5, COLOR: '#514635' }, // ROCK
         { MAX: 1, COLOR: '#f4f0e8' }, // SNOW
     ],
