@@ -18,31 +18,6 @@ export default function buildMap(ctx) {
     drawMap()
   }
 
-  function drawMap() {
-    for (let row = 0; row < map.length; row++) {
-      for (let col = 0; col < map[0].length; col++) {
-        let value = perlinInfo.values[row][col]
-        let color
-        if (value <= 0) {
-          color = cfg.COLORS.WATER[2]
-        } else if (value > 0 && value <= 0.1) {
-          color = cfg.COLORS.WATER[0]
-        } else if (value > 0.1 && value <= 0.4) {
-          color = cfg.COLORS.GRASS[1]
-        } else if (value > 0.4 && value <= 0.5) {
-          color = cfg.COLORS.MOUNTAIN[0]
-        } else if (value > 0.5 && value <= 0.7) {
-          color = cfg.COLORS.MOUNTAIN[0]
-        } else if (value > 0.7 && value <= 0.85) {
-          color = cfg.COLORS.MOUNTAIN[1]
-        } else if (value > 0.85) {
-          color = cfg.COLORS.MOUNTAIN[2]
-        }
-        drawCell(col, row, color)
-      }
-    }
-  }
-
   function drawMapBorder() {
     const outterBorderRect = cfg.getOutterBorderRect()
     painter.drawRect({
@@ -50,7 +25,7 @@ export default function buildMap(ctx) {
       y: outterBorderRect.y,
       width: outterBorderRect.width,
       height: outterBorderRect.height,
-      color: cfg.COLORS.CELL
+      color: cfg.COLORS.BOARD.BORDER
     })
 
     const innerBorderRect = cfg.getInnerBorderRect()
@@ -59,8 +34,34 @@ export default function buildMap(ctx) {
       y: innerBorderRect.y,
       width: innerBorderRect.width,
       height: innerBorderRect.height,
-      color: cfg.COLORS.BACKGROUND
+      color: cfg.COLORS.BOARD.BACKGROUND
     })
+  }
+
+  function drawMap() {
+    for (let row = 0; row < map.length; row++) {
+      for (let col = 0; col < map[0].length; col++) {
+        let value = perlinInfo.values[row][col]
+        let color
+        if (value <= 0) {
+          color = cfg.COLORS.MAP.WATER[2]
+        } else if (value > 0 && value <= 0.1) {
+          color = cfg.COLORS.MAP.WATER[0]
+        } else if (value > 0.1 && value <= 0.4) {
+          color = cfg.COLORS.MAP.GRASS[1]
+        } else if (value > 0.4 && value <= 0.5) {
+          color = cfg.COLORS.MAP.MOUNTAIN[0]
+        } else if (value > 0.5 && value <= 0.7) {
+          color = cfg.COLORS.MAP.MOUNTAIN[0]
+        } else if (value > 0.7 && value <= 0.85) {
+          color = cfg.COLORS.MAP.MOUNTAIN[1]
+        } else if (value > 0.85) {
+          color = cfg.COLORS.MAP.MOUNTAIN[2]
+        }
+        color = painter.randomizeColor(color)
+        drawCell(col, row, color)
+      }
+    }
   }
 
   function drawCell(x, y, color) {

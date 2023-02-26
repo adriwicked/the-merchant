@@ -9,12 +9,15 @@ export default {
     MAP_HEIGHT: 41,
     PERLIN_CELL_RESOLUTION: 10,
     COLORS: {
-        BACKGROUND: '#333',
-        BORDER: 'red',
-        CELL: '#777777',
-        WATER: ['#2f83c9', '#2375b4', '#256299'],
-        GRASS: ['#428d48', '#5cb35d', '#4fa254'],
-        MOUNTAIN: ['#8e7c6a', '#514635', '#cfcfcf'],
+        BOARD: {
+            BACKGROUND: '#333',
+            BORDER: '#777'
+        },
+        MAP: {
+            WATER: ['#2f83c9', '#2375b4', '#256299'],
+            GRASS: ['#428d48', '#5cb35d', '#4fa254'],
+            MOUNTAIN: ['#8e7c6a', '#514635', '#cfcfcf'],
+        }
     },
     getOutterBorderRect() {
         let mapSize = this.getMapSize()
