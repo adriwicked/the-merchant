@@ -2,15 +2,53 @@ import cfg from './config.js'
 import painter from './painter.js'
 import getPerlinGrid from './perlin.js'
 
-export default function buildMap(ctx) {
-  const terrain = getPerlinGrid({
+export default function buildMap() {
+  const heightGrid = getPerlinGrid({
     gridWidth: cfg.MAP_WIDTH,
     gridHeight: cfg.MAP_HEIGHT,
     resolution: cfg.PERLIN_CELL_RESOLUTION,
   })
 
+  let terrainGrid = getTerrainCells(heightGrid)
+  terrainGrid = generateSeaShores(terrainGrid)
+
+  function getTerrainCells(heightGrid) {
+    const cells = []
+
+    for (let row = 0; row < heightGrid.length; row++) {
+      cells[row] = []
+      for (let col = 0; col < heightGrid[0].length; col++) {
+        const height = heightGrid[row][col]
+        cells[row][col] = Object.values(cfg.MAP_RANGES.BASE)
+          .find(range => height <= range.MAX)
+      }
+    }
+
+    return cells
+  }
+
+  function generateSeaShores(terrainGrid) {
+    return terrainGrid.map((rowArr, row) => rowArr.map((cell, col) => {
+      const isWater = cell.SYMBOL === cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL
+      if (isWater) {
+        if (hasNearCell(row, col, cfg.MAP_RANGES.BASE.LOW_GRASS)) {
+          return cfg.MAP_RANGES.SHORE.SEA_SHORE
+        }
+      }
+
+      const isLowGrass = cell.SYMBOL === cfg.MAP_RANGES.BASE.LOW_GRASS.SYMBOL
+      if (isLowGrass) {
+        if (hasNearCell(row, col, cfg.MAP_RANGES.BASE.MEDIUM_WATER)) {
+          return cfg.MAP_RANGES.SHORE.BEACH_SAND
+        }
+      }
+
+      return cell
+    }))
+  }
+
   function draw() {
-    painter.clearCanvas(ctx)
+    painter.clearCanvas()
     drawMapBorder()
     drawMap()
   }
@@ -36,48 +74,23 @@ export default function buildMap(ctx) {
   }
 
   function drawMap() {
-    for (let row = 0; row < terrain.length; row++) {
-      for (let col = 0; col < terrain[0].length; col++) {
-        let height = terrain[row][col]
-        let color = getCellColor(height, row, col)
-        drawCell(col, row, painter.randomizeColor(color))
+    for (let row = 0; row < terrainGrid.length; row++) {
+      for (let col = 0; col < terrainGrid[0].length; col++) {
+        const cell = terrainGrid[row][col]
+        drawCell(col, row, painter.randomizeColor(cell.COLOR))
       }
     }
   }
 
-  function getCellColor(height, row, col) {
-    const isWater = height <= cfg.MAP_RANGES.SHORE.SURFACE.MAX
-
-    if (isWater) {
-      const isSeashore = isShore(row, col, height => height > cfg.MAP_RANGES.SHORE.SURFACE.MAX)
-
-      if (isSeashore) {
-        return cfg.MAP_RANGES.SHORE.SURFACE.COLOR
-      }
-
-      return cfg.MAP_RANGES.BASE.MEDIUM.COLOR
-    }
-
-    const isBeach = isShore(row, col, height => height <= cfg.MAP_RANGES.SHORE.SURFACE.MAX)
-    if (isBeach) {
-      return cfg.MAP_RANGES.SHORE.SAND.COLOR
-    }
-
-    const range = Object.values(cfg.MAP_RANGES.BASE)
-      .find(r => height <= r.MAX)
-
-    return range.COLOR
-  }
-
-  function isShore(row, col, checkFunction) {
-    const top = row > 0 ? terrain[row - 1][col] : null
-    const right = col < terrain[0].length - 1 ? terrain[row][col + 1] : null
-    const bottom = row < terrain.length - 1 ? terrain[row + 1][col] : null
-    const left = col > 0 ? terrain[row][col - 1] : null
+  function hasNearCell(row, col, cellType) {
+    const top = row > 0 ? terrainGrid[row - 1][col] : null
+    const right = col < terrainGrid[0].length - 1 ? terrainGrid[row][col + 1] : null
+    const bottom = row < terrainGrid.length - 1 ? terrainGrid[row + 1][col] : null
+    const left = col > 0 ? terrainGrid[row][col - 1] : null
 
     return [top, right, bottom, left]
-      .filter(height => height !== null)
-      .some(checkFunction)
+      .filter(nearCell => nearCell !== null)
+      .some(nearCell => nearCell.SYMBOL === cellType.SYMBOL)
   }
 
   function drawCell(x, y, color) {
@@ -91,7 +104,7 @@ export default function buildMap(ctx) {
   }
 
   function drawPerlinVectors() {
-    const vectors = terrain.vectors
+    const vectors = heightGrid.vectors
 
     for (let y = 0; y < vectors.length; y++) {
       for (let x = 0; x < vectors[0].length; x++) {

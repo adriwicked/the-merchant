@@ -10,17 +10,17 @@ export default {
     PERLIN_CELL_RESOLUTION: 19,
     MAP_RANGES: {
         BASE: {
-            DEEP: { MAX: -0.4, COLOR: '#256299' },
-            MEDIUM: { MAX: -0.03, COLOR: '#2375b4' },
-            LOW: { MAX: 0.2, COLOR: '#457950' },
-            HIGHT: { MAX: 0.3, COLOR: '#2d673e' },
-            DIRT: { MAX: 0.4, COLOR: '#3F573A' },
-            ROCK: { MAX: 0.5, COLOR: '#514635' },
-            DARK_ROCK: { MAX: 1, COLOR: '#37342f' },
+            DEEP_WATER: { MAX: -0.4, SYMBOL: 'DW', COLOR: '#256299' },
+            MEDIUM_WATER: { MAX: -0.03, SYMBOL: 'MW', COLOR: '#2375b4' },
+            LOW_GRASS: { MAX: 0.2, SYMBOL: 'LG', COLOR: '#457950' },
+            HIGH_GRASS: { MAX: 0.3, SYMBOL: 'HG', COLOR: '#2d673e' },
+            DIRT: { MAX: 0.4, SYMBOL: 'DT', COLOR: '#3F573A' },
+            ROCK: { MAX: 0.5, SYMBOL: 'RC', COLOR: '#514635' },
+            DARK_ROCK: { MAX: 1, SYMBOL: 'DR', COLOR: '#37342f' },
         },
         SHORE: {
-            SURFACE: { MAX: 0.035, COLOR: '#4699de' },
-            SAND: { MAX: 0.09, COLOR: '#ab976a' },
+            SEA_SHORE: { MAX: 0.035, SYMBOL: 'SS', COLOR: '#4699de' },
+            BEACH_SAND: { MAX: 0.09, SYMBOL: 'BS', COLOR: '#ab976a' },
         }
     },
     COLORS: {
