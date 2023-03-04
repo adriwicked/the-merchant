@@ -1,12 +1,9 @@
 import cfg from './config.js'
 import painter from './painter.js'
-import getPerlinInfo from './perlin.js'
+import getPerlinGrid from './perlin.js'
 
 export default function buildMap(ctx) {
-  let map = new Array(cfg.MAP_HEIGHT).fill(0)
-    .map(() => new Array(cfg.MAP_WIDTH).fill(0))
-
-  const perlinInfo = getPerlinInfo({
+  const terrain = getPerlinGrid({
     gridWidth: cfg.MAP_WIDTH,
     gridHeight: cfg.MAP_HEIGHT,
     resolution: cfg.PERLIN_CELL_RESOLUTION,
@@ -39,21 +36,48 @@ export default function buildMap(ctx) {
   }
 
   function drawMap() {
-    for (let row = 0; row < map.length; row++) {
-      for (let col = 0; col < map[0].length; col++) {
-        let height = perlinInfo.values[row][col]
-        let color = getHeightColor(height)
-        color = painter.randomizeColor(color)
-        drawCell(col, row, color)
+    for (let row = 0; row < terrain.length; row++) {
+      for (let col = 0; col < terrain[0].length; col++) {
+        let height = terrain[row][col]
+        let color = getCellColor(height, row, col)
+        drawCell(col, row, painter.randomizeColor(color))
       }
     }
   }
 
-  function getHeightColor(height) {
-    const range = cfg.MAP_COLOR_RANGES
+  function getCellColor(height, row, col) {
+    const isWater = height <= cfg.MAP_RANGES.SHORE.SURFACE.MAX
+
+    if (isWater) {
+      const isSeashore = isShore(row, col, height => height > cfg.MAP_RANGES.SHORE.SURFACE.MAX)
+
+      if (isSeashore) {
+        return cfg.MAP_RANGES.SHORE.SURFACE.COLOR
+      }
+
+      return cfg.MAP_RANGES.BASE.MEDIUM.COLOR
+    }
+
+    const isBeach = isShore(row, col, height => height <= cfg.MAP_RANGES.SHORE.SURFACE.MAX)
+    if (isBeach) {
+      return cfg.MAP_RANGES.SHORE.SAND.COLOR
+    }
+
+    const range = Object.values(cfg.MAP_RANGES.BASE)
       .find(r => height <= r.MAX)
 
     return range.COLOR
+  }
+
+  function isShore(row, col, checkFunction) {
+    const top = row > 0 ? terrain[row - 1][col] : null
+    const right = col < terrain[0].length - 1 ? terrain[row][col + 1] : null
+    const bottom = row < terrain.length - 1 ? terrain[row + 1][col] : null
+    const left = col > 0 ? terrain[row][col - 1] : null
+
+    return [top, right, bottom, left]
+      .filter(height => height !== null)
+      .some(checkFunction)
   }
 
   function drawCell(x, y, color) {
@@ -67,7 +91,7 @@ export default function buildMap(ctx) {
   }
 
   function drawPerlinVectors() {
-    const vectors = perlinInfo.vectors
+    const vectors = terrain.vectors
 
     for (let y = 0; y < vectors.length; y++) {
       for (let x = 0; x < vectors[0].length; x++) {

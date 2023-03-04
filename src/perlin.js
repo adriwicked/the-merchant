@@ -1,11 +1,6 @@
-export default function getPerlinInfo({ gridWidth, gridHeight, resolution }) {
+export default function getPerlinGrid({ gridWidth, gridHeight, resolution }) {
   const vectors = generateGradVectors({ gridWidth, gridHeight, resolution })
-  const values = generateValues({ gridWidth, gridHeight })
-
-  return {
-    vectors,
-    values
-  }
+  return generateValues({ gridWidth, gridHeight })
 
   function generateGradVectors({ gridWidth, gridHeight, resolution }) {
     const numVectorsX = Math.floor(gridWidth / resolution) + 1

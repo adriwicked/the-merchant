@@ -8,16 +8,21 @@ export default {
     MAP_WIDTH: 41,
     MAP_HEIGHT: 41,
     PERLIN_CELL_RESOLUTION: 19,
-    MAP_COLOR_RANGES: [
-        { MAX: -0.4, COLOR: '#256299' }, // DEEP
-        { MAX: -0.03, COLOR: '#2375b4' }, // MEDIUM
-        { MAX: 0.02, COLOR: '#4699de' }, // SURFACE
-        { MAX: 0.09, COLOR: '#ab976a' }, // SAND
-        { MAX: 0.2, COLOR: '#457950' }, // LIGHT HIGH GRASS
-        { MAX: 0.4, COLOR: '#2d673e' }, // DARK LOW GRASS
-        { MAX: 0.5, COLOR: '#514635' }, // ROCK
-        { MAX: 1, COLOR: '#f4f0e8' }, // SNOW
-    ],
+    MAP_RANGES: {
+        BASE: {
+            DEEP: { MAX: -0.4, COLOR: '#256299' },
+            MEDIUM: { MAX: -0.03, COLOR: '#2375b4' },
+            LOW: { MAX: 0.2, COLOR: '#457950' },
+            HIGHT: { MAX: 0.3, COLOR: '#2d673e' },
+            DIRT: { MAX: 0.4, COLOR: '#3F573A' },
+            ROCK: { MAX: 0.5, COLOR: '#514635' },
+            DARK_ROCK: { MAX: 1, COLOR: '#37342f' },
+        },
+        SHORE: {
+            SURFACE: { MAX: 0.035, COLOR: '#4699de' },
+            SAND: { MAX: 0.09, COLOR: '#ab976a' },
+        }
+    },
     COLORS: {
         BOARD: {
             BACKGROUND: '#333',
