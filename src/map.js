@@ -18,13 +18,22 @@ export default function buildMap() {
     for (let row = 0; row < heightGrid.length; row++) {
       cells[row] = []
       for (let col = 0; col < heightGrid[0].length; col++) {
-        const height = heightGrid[row][col]
-        cells[row][col] = Object.values(cfg.MAP_RANGES.BASE)
-          .find(range => height <= range.MAX)
+        let range = getRangeByHeight(heightGrid[row][col])
+        cells[row][col] = getRangeWithRandColor(range)
       }
     }
 
     return cells
+  }
+
+  function getRangeByHeight(height) {
+    return Object.values(cfg.MAP_RANGES.BASE)
+      .find(range => height <= range.MAX)
+  }
+
+  function getRangeWithRandColor(range) {
+    const newColor = painter.randomizeColor(range.COLOR)
+    return Object.assign({}, range, { COLOR: newColor })
   }
 
   function generateSeaShores(terrainGrid) {
@@ -77,9 +86,22 @@ export default function buildMap() {
     for (let row = 0; row < terrainGrid.length; row++) {
       for (let col = 0; col < terrainGrid[0].length; col++) {
         const cell = terrainGrid[row][col]
-        drawCell(col, row, painter.randomizeColor(cell.COLOR))
+        if (isWaterCell(cell)) {
+          drawCell(col, row, painter.randomizeColor(cell.COLOR))
+        } else {
+          drawCell(col, row, cell.COLOR)
+        }
       }
     }
+  }
+
+  function isWaterCell(cell) {
+    const waterRangesSymbols = [
+      cfg.MAP_RANGES.BASE.DEEP_WATER.SYMBOL,
+      cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL,
+      cfg.MAP_RANGES.SHORE.SEA_SHORE.SYMBOL,
+    ]
+    return waterRangesSymbols.some(s => s === cell.SYMBOL)
   }
 
   function hasNearCell(row, col, cellType) {
