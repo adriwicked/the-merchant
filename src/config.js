@@ -24,7 +24,7 @@ export default {
     },
     COLORS: {
         BOARD: {
-            BACKGROUND: '#333',
+            BACKGROUND: '#3c3c3c',
             BORDER: '#777'
         }
     },
