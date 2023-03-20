@@ -1,13 +1,13 @@
 import cfg from './config.js'
 import painter from './painter.js'
-import getPerlinGrid from './perlin.js'
+import getPerlinValues from './perlin.js'
 
 export default function buildMap() {
-  const heightGrid = getPerlinGrid({
-    gridWidth: cfg.MAP_WIDTH,
-    gridHeight: cfg.MAP_HEIGHT,
-    resolution: cfg.PERLIN_CELL_RESOLUTION,
-  })
+  const heightGrid = getPerlinValues(
+    cfg.MAP_WIDTH,
+    cfg.MAP_HEIGHT,
+    cfg.PERLIN_CELL_RESOLUTION
+  )
 
   let terrainGrid = getTerrainCells(heightGrid)
   terrainGrid = generateSeaShores(terrainGrid)
