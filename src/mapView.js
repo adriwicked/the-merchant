@@ -33,7 +33,7 @@ const buildMapView = () => {
       for (let col = 0; col < map[0].length; col++) {
         const cell = map[row][col]
         if (cell.isWater()) {
-          drawCell(col, row, cell.getColor())
+          drawCell(col, row, painter.getRandColorTweak(cell.getColor()))
         } else {
           drawCell(col, row, cell.getColor())
         }
