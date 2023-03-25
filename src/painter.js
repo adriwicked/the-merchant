@@ -33,8 +33,8 @@ function drawVector(origin, terminal) {
   ctx.restore()
 }
 
-function randomizeColor(hexColor) {
-  let {r, g, b} = hexToRgb(hexColor)
+function getRandColorTweak(hexColor) {
+  let { r, g, b } = hexToRgb(hexColor)
 
   let randSaturation = Math.random() * 0.1 + 0.95
   let randBrightness = Math.random() * 0.1 + 0.95
@@ -51,7 +51,7 @@ function hexToRgb(hexColor) {
   let r = parseInt(hex.substring(0, 2), 16)
   let g = parseInt(hex.substring(2, 4), 16)
   let b = parseInt(hex.substring(4, 6), 16)
-  return {r, g, b}
+  return { r, g, b }
 }
 
 function rgbToHex(r, g, b) {
@@ -66,11 +66,10 @@ function componentToHex(c) {
   return hex.length === 1 ? "0" + hex : hex
 }
 
-
 export default {
   clearCanvas,
   drawBackground,
   drawRect,
   drawVector,
-  randomizeColor
+  getRandColorTweak
 }

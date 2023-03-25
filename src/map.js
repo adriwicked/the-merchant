@@ -1,18 +1,10 @@
 import cfg from './config.js'
+import getPerlinGrid from './perlin.js'
 import painter from './painter.js'
-import getPerlinValues from './perlin.js'
+import buildMapView from './mapView.js'
 
-export default function buildMap() {
-  const heightGrid = getPerlinValues(
-    cfg.MAP_WIDTH,
-    cfg.MAP_HEIGHT,
-    cfg.PERLIN_CELL_RESOLUTION
-  )
-
-  let terrainGrid = getTerrainCells(heightGrid)
-  terrainGrid = generateSeaShores(terrainGrid)
-
-  function getTerrainCells(heightGrid) {
+const buildMap = () => {
+  const getTerrainCells = (heightGrid) => {
     const cells = []
 
     for (let row = 0; row < heightGrid.length; row++) {
@@ -26,17 +18,17 @@ export default function buildMap() {
     return cells
   }
 
-  function getRangeByHeight(height) {
+  const getRangeByHeight = (height) => {
     return Object.values(cfg.MAP_RANGES.BASE)
       .find(range => height <= range.MAX)
   }
 
-  function getRangeWithRandColor(range) {
-    const newColor = painter.randomizeColor(range.COLOR)
+  const getRangeWithRandColor = (range) => {
+    const newColor = painter.getRandColorTweak(range.COLOR)
     return Object.assign({}, range, { COLOR: newColor })
   }
 
-  function generateSeaShores(terrainGrid) {
+  const generateSeaShores = (terrainGrid) => {
     return terrainGrid.map((rowArr, row) => rowArr.map((cell, col) => {
       const isWater = cell.SYMBOL === cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL
       if (isWater) {
@@ -56,55 +48,7 @@ export default function buildMap() {
     }))
   }
 
-  function draw() {
-    painter.clearCanvas()
-    drawMapBorder()
-    drawMap()
-  }
-
-  function drawMapBorder() {
-    const outterBorderRect = cfg.getOutterBorderRect()
-    painter.drawRect({
-      x: outterBorderRect.x,
-      y: outterBorderRect.y,
-      width: outterBorderRect.width,
-      height: outterBorderRect.height,
-      color: cfg.COLORS.BOARD.BORDER
-    })
-
-    const innerBorderRect = cfg.getInnerBorderRect()
-    painter.drawRect({
-      x: innerBorderRect.x,
-      y: innerBorderRect.y,
-      width: innerBorderRect.width,
-      height: innerBorderRect.height,
-      color: cfg.COLORS.BOARD.BACKGROUND
-    })
-  }
-
-  function drawMap() {
-    for (let row = 0; row < terrainGrid.length; row++) {
-      for (let col = 0; col < terrainGrid[0].length; col++) {
-        const cell = terrainGrid[row][col]
-        if (isWaterCell(cell)) {
-          drawCell(col, row, painter.randomizeColor(cell.COLOR))
-        } else {
-          drawCell(col, row, cell.COLOR)
-        }
-      }
-    }
-  }
-
-  function isWaterCell(cell) {
-    const waterRangesSymbols = [
-      cfg.MAP_RANGES.BASE.DEEP_WATER.SYMBOL,
-      cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL,
-      cfg.MAP_RANGES.SHORE.SEA_SHORE.SYMBOL,
-    ]
-    return waterRangesSymbols.some(s => s === cell.SYMBOL)
-  }
-
-  function hasNearCell(row, col, cellType) {
+  const hasNearCell = (row, col, cellType) => {
     const top = row > 0 ? terrainGrid[row - 1][col] : null
     const right = col < terrainGrid[0].length - 1 ? terrainGrid[row][col + 1] : null
     const bottom = row < terrainGrid.length - 1 ? terrainGrid[row + 1][col] : null
@@ -115,48 +59,20 @@ export default function buildMap() {
       .some(nearCell => nearCell.SYMBOL === cellType.SYMBOL)
   }
 
-  function drawCell(x, y, color) {
-    painter.drawRect({
-      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * x,
-      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * y,
-      width: cfg.CELL_SIZE,
-      height: cfg.CELL_SIZE,
-      color
-    })
-  }
+  const heightGrid = getPerlinGrid(
+    cfg.MAP_WIDTH,
+    cfg.MAP_HEIGHT,
+    cfg.PERLIN_CELL_RESOLUTION
+  )
 
-  function drawPerlinVectors() {
-    const vectors = heightGrid.vectors
-
-    for (let y = 0; y < vectors.length; y++) {
-      for (let x = 0; x < vectors[0].length; x++) {
-        const vector = vectors[y][x]
-        drawVectorInMap(
-          {
-            x: x * cfg.PERLIN_CELL_RESOLUTION,
-            y: y * cfg.PERLIN_CELL_RESOLUTION
-          },
-          vector
-        )
-      }
-    }
-  }
-
-  function drawVectorInMap(mapCoords, vector) {
-    const origin = {
-      x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * mapCoords.x,
-      y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * mapCoords.y
-    }
-
-    const terminal = {
-      x: origin.x + vector.x * cfg.CELL_SIZE * 3,
-      y: origin.y + vector.y * cfg.CELL_SIZE * 3
-    }
-
-    painter.drawVector(origin, terminal)
-  }
+  let terrainGrid = getTerrainCells(heightGrid)
+  terrainGrid = generateSeaShores(terrainGrid)
+  const mapView = buildMapView()
 
   return {
-    draw
+    getTerrainGrid: () => terrainGrid,
+    drawMap: () => mapView.draw(terrainGrid)
   }
 }
+
+export default buildMap

@@ -1,14 +1,16 @@
-import game from './game.js';
+import buildGame from './game.js';
 
-window.onload = init
+let game = null
 
-function init() {
-  document.querySelector('#regenerate-map').addEventListener('click', game.regenerateMap)
-  game.init({ canvas: document.getElementById('game-canvas') })
+window.onload = () => {
+  const canvas = document.getElementById('game-canvas')
+  game = buildGame(canvas)
+  document.querySelector('#regenerate-map')
+    .addEventListener('click', game.regenerateMap)
   window.requestAnimationFrame(gameLoop)
 }
 
-function gameLoop(time) {
+const gameLoop = time => {
   game.update(time)
   window.requestAnimationFrame(gameLoop)
 }

@@ -1,4 +1,4 @@
-export default function getPerlinValues(width, height, resolution) {
+export default function getPerlinGrid(width, height, resolution) {
   const vectors = getVectors(width, height, resolution)
   return getValues(width, height)
 

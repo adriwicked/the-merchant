@@ -1,0 +1,23 @@
+{
+  "name": "the_merchant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type" : "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriwicked/the-merchant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adriwicked/the-merchant/issues"
+  },
+  "homepage": "https://github.com/adriwicked/the-merchant#readme",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
