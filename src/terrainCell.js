@@ -8,7 +8,7 @@ const buildTerrainCell = height => {
   }
 
   const terrainType = setTerrainType(height)
-  const randomizedColor = painter.getRandColorVariation(terrainType.COLOR)
+  const randomizedColor = painter.getRandColorTweak(terrainType.COLOR)
   const waterRangesSymbols = [
     cfg.MAP_RANGES.BASE.DEEP_WATER.SYMBOL,
     cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL,

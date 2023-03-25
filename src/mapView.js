@@ -32,22 +32,13 @@ const buildMapView = () => {
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
         const cell = map[row][col]
-        if (isWaterCell(cell)) {
-          drawCell(col, row, painter.getRandColorTweak(cell.COLOR))
+        if (cell.isWater()) {
+          drawCell(col, row, cell.getColor())
         } else {
-          drawCell(col, row, cell.COLOR)
+          drawCell(col, row, cell.getColor())
         }
       }
     }
-  }
-
-  const isWaterCell = (cell) => {
-    const waterRangesSymbols = [
-      cfg.MAP_RANGES.BASE.DEEP_WATER.SYMBOL,
-      cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL,
-      cfg.MAP_RANGES.SHORE.SEA_SHORE.SYMBOL,
-    ]
-    return waterRangesSymbols.some(s => s === cell.SYMBOL)
   }
 
   const drawCell = (x, y, color) => {

@@ -2,6 +2,7 @@ import cfg from './config.js'
 import getPerlinGrid from './perlin.js'
 import painter from './painter.js'
 import buildMapView from './mapView.js'
+import buildTerrainCell from './terrainCell.js'
 
 const buildMap = () => {
   const getTerrainCells = (heightGrid) => {
@@ -10,8 +11,7 @@ const buildMap = () => {
     for (let row = 0; row < heightGrid.length; row++) {
       cells[row] = []
       for (let col = 0; col < heightGrid[0].length; col++) {
-        let range = getRangeByHeight(heightGrid[row][col])
-        cells[row][col] = getRangeWithRandColor(range)
+        cells[row][col] = buildTerrainCell(heightGrid[row][col])
       }
     }
 
@@ -30,15 +30,14 @@ const buildMap = () => {
 
   const generateSeaShores = (terrainGrid) => {
     return terrainGrid.map((rowArr, row) => rowArr.map((cell, col) => {
-      const isWater = cell.SYMBOL === cfg.MAP_RANGES.BASE.MEDIUM_WATER.SYMBOL
-      if (isWater) {
+      if (cell.isWater()) {
         if (hasNearCell(row, col, cfg.MAP_RANGES.BASE.LOW_GRASS)) {
           return cfg.MAP_RANGES.SHORE.SEA_SHORE
         }
       }
 
       const isLowGrass = cell.SYMBOL === cfg.MAP_RANGES.BASE.LOW_GRASS.SYMBOL
-      if (isLowGrass) {
+      if (cell.isLowGrass()) {
         if (hasNearCell(row, col, cfg.MAP_RANGES.BASE.MEDIUM_WATER)) {
           return cfg.MAP_RANGES.SHORE.BEACH_SAND
         }
