@@ -27,7 +27,7 @@ export default function buildCell(param) {
 
   return {
     getColor: () => randomizedColor,
-    getTerrainType: () => terrainType.SYMBOL,
+    getTerrainSymbol: () => terrainType.SYMBOL,
     isWater,
     isLowGrass,
   }

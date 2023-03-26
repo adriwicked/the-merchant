@@ -13,5 +13,5 @@ test('its grass cell', () => {
 
 test('it can be built indicating type', () => {
   const terrainCell = buildCell(cfg.MAP_RANGES.SHORE.SEA_SHORE)
-  expect(terrainCell.getTerrainType()).toBe('SS')
+  expect(terrainCell.getTerrainSymbol()).toBe('SS')
 })
