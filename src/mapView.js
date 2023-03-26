@@ -1,14 +1,14 @@
 import cfg from './config.js'
 import painter from './painter.js'
 
-const buildMapView = () => {
-  const draw = map => {
+export default function buildMapView() {
+  function draw(map) {
     painter.clearCanvas()
     drawMapBorder()
     drawMap(map)
   }
 
-  const drawMapBorder = () => {
+  function drawMapBorder () {
     const outterBorderRect = cfg.getOutterBorderRect()
     painter.drawRect({
       x: outterBorderRect.x,
@@ -28,7 +28,7 @@ const buildMapView = () => {
     })
   }
 
-  const drawMap = map => {
+  function drawMap(map) {
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[0].length; col++) {
         const cell = map[row][col]
@@ -41,7 +41,7 @@ const buildMapView = () => {
     }
   }
 
-  const drawCell = (x, y, color) => {
+  function drawCell (x, y, color) {
     painter.drawRect({
       x: cfg.getMapPosition().x + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * x,
       y: cfg.getMapPosition().y + (cfg.CELL_SIZE + cfg.CELL_SEPARATION) * y,
@@ -55,5 +55,3 @@ const buildMapView = () => {
     draw
   }
 }
-
-export default buildMapView

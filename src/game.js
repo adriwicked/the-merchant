@@ -4,9 +4,6 @@ import cfg from './config.js'
 export let ctx
 
 const buildGame = canvas => {
-  let lastTime = 0
-  let elapsedTime = 0
-
   canvas.width = cfg.CANVAS_WIDTH
   canvas.height = cfg.CANVAS_HEIGHT
 
@@ -20,6 +17,8 @@ const buildGame = canvas => {
     map.drawMap()
   }
 
+  let lastTime = 0
+  let elapsedTime = 0
   const update = (time) => {
     if (lastTime == 0) {
       lastTime = time
